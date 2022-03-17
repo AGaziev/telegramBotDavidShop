@@ -1,7 +1,11 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
 
-categoryKB=ReplyKeyboardMarkup()
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
+admButtons = [
+    ('Добавить', 'addCloth')
+]
 
-kb_client.add(buttonLohCheck)
+ikbAdmin = InlineKeyboardMarkup()
+rowButtons = (InlineKeyboardButton(text,callback_data=data) for text,data in admButtons)
+ikbAdmin.add(*rowButtons)

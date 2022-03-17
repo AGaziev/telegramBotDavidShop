@@ -6,9 +6,9 @@ import botConfigure
 # конфиг бота
 
 try:
-    bot = Bot(token=configure.config['token'])
+    bot = Bot(token=botConfigure.config['token'])
     dp = Dispatcher(bot)
 except:
     print('Произошла ошибка при авторизации токена')
 
-fsm = MemoryStorage
+fsm = MemoryStorage()
