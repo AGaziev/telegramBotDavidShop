@@ -1,10 +1,10 @@
 from create_bot import bot, dp, fsm
-from keyboard import categoryList, ikbAdmin
+from keyboard import ikbAdmin, kbDownCat, kbUpCat, kbShoeCat, kbMainCat
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
-from aiogram.types import KeyboardButton,ReplyKeyboardMarkup
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 adminId = {1256578670: 'David',
            292667494: 'Alan'}
@@ -43,8 +43,10 @@ async def admStart(message: types.Message):
 
 @dp.callback_query_handler(text='addCloth')
 async def chooseCategory(call: types.CallbackQuery, state: FSMContext):
-    await bot.send_message(call.from_user.id, 'Выберите категорию', reply_markup=kbCategory)
+    await call.message.edit_text('Добавление вещи...')
+    await bot.send_message(call.from_user.id, 'Выберите категорию', reply_markup=kbMainCat)
     await call.answer('start adding new cloth', show_alert=False)
+    await FSMAdmin.category.set()
 
 
 def register_handlers():
