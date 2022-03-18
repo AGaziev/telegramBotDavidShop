@@ -5,6 +5,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from DatabaseHandler import DBcontroller
 
 adminId = {1256578670: 'David',
            292667494: 'Alan'}
@@ -129,7 +130,7 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
             for photo in message.photo[3::4]:
                 data['photo'].append(photo.file_id)
     async with state.proxy() as data:
-        pass
+        DBcontroller.addCloth(data)
     await state.finish()
     await admStart(message)
 

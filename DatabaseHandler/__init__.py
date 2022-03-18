@@ -1,1 +1,3 @@
-import DBcontroller
+from DatabaseHandler.firebaseConfigure import db
+from DatabaseHandler import DBcontroller
+from DatabaseHandler import firebaseConfigure
