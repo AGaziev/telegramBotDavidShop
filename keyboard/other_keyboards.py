@@ -37,7 +37,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # ikbMainCat.add(*ikbMainButs)
 
 # dict with keyboards
-kbDict = {
+otherKbDict = {
     #'mainInline': ikbMainCat,
     'main': kbMainCat,
     'Обувь': kbShoeCat,
