@@ -96,8 +96,12 @@ async def choosePhoto(message: types.Message, state: FSMContext):
 
 # @dp.message_handler(content_types = ['photo'], state=FSMAdminAdd.photo)
 async def endAddingCloth(message: types.Message, state: FSMContext):
-    print(message.photo[3])
-    await bot.send_photo(message.chat.id, message.photo[3].file_id)
+    if message.text != '-':
+        async with state.proxy() as data:
+            data['photo'] = []
+            for photo in message.photo[3::4]:
+                print(type(data['photo']))
+                print(photo.file_id, photo.width, photo.height)
 
 
 def register_handlers():
