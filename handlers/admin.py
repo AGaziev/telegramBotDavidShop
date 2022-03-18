@@ -108,11 +108,8 @@ async def chooseCondition(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             data['price'] = 'Бесплатно'
     await FSMAdmin.next()
-    condKb = adminKbDict['condition']
-    condKb.one_time_keyboard = True
     await bot.send_message(message.chat.id, 'Выберите состояние',
-                           reply_markup=condKb)
-    del condKb
+                           reply_markup=adminKbDict['condition'])
 
 
 # @dp.message_handler(state=FSMAdminAdd.condition)
@@ -132,8 +129,9 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
             for photo in message.photo[3::4]:
                 data['photo'].append(photo.file_id)
     async with state.proxy() as data:
-        print(data)
+        pass
     await state.finish()
+    await admStart(message)
 
 
 def register_handlers():

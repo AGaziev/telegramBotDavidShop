@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButt
 
 # conditions variants
 conditions = ('Хорошее', 'Отличное')
-kbCondition = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+kbCondition = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 conditionButtons = (KeyboardButton(text=text) for text in conditions)
 kbCondition.add(*conditionButtons)
 
