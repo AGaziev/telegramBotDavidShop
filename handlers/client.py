@@ -17,6 +17,6 @@ async def checkLoh(message: types.Message):
 
 
 def register_handlers():
-    pass
-#    dp.register_message_handler(start,commands=['start'])
-#   dp.register_message_handler(checkLoh, state=None)
+    dp.register_message_handler(start,commands=['start'])
+    dp.register_message_handler(checkLoh, state=None)
+    print('registered Client handlers')
