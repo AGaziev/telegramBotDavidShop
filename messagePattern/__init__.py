@@ -1,0 +1,1 @@
+from messagePattern.patternCreator import replyPatterns
