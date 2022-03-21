@@ -1,1 +1,0 @@
-from DatabaseHandler.statisticsCounters.counterClass import clothesCount

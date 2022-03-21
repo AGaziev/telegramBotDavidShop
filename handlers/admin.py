@@ -35,7 +35,6 @@ async def cancelAdd(message: types.Message, state: FSMContext):
     await message.reply('Отмена')
     await state.finish()
 
-
 # # @dp.message_handler(state=FSMAdmin.GroupStates['addCloth'], commands='назад')
 # # @dp.message_handler(Text(equals='назад', ignore_case=True), state=FSMAdmin.GroupStates['addCloth'])
 # async def cancelAdd(message: types.Message, state: FSMContext):
@@ -148,8 +147,7 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             if 'photo' not in data:
                 data['photo'] = []
-            for photo in message.photo[3::4]:
-                data['photo'].append(photo.file_id)
+            data['photo'].append(message.photo[3].file_id)
     kbAddPhoto = InlineKeyboardMarkup()
     kbAddPhoto.add(InlineKeyboardButton('Нет', callback_data='returnToAdmin'))
     await bot.send_message(message.chat.id, 'Ещё фото?', reply_markup=kbAddPhoto)
