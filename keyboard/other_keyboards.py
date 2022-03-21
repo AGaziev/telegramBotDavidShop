@@ -23,22 +23,11 @@ kbDownCat.add(*kbDownButs)
 kbUpCat = ReplyKeyboardMarkup(resize_keyboard=True)
 kbUpCat.add(*kbUpButs)
 
-#inline kbs
+# inline kbs
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-# categoryInline = [
-#     ('Обувь', 'Обувь'),
-#     ('Верх', 'Верх'),
-#     ('Низ', 'Низ'),
-# ]
-#
-# ikbMainButs = (InlineKeyboardButton(text, callback_data=data) for text, data in categoryInline)
-#
-# ikbMainCat = InlineKeyboardMarkup
-# ikbMainCat.add(*ikbMainButs)
 
 # dict with keyboards
 otherKbDict = {
-    #'mainInline': ikbMainCat,
     'main': kbMainCat,
     'Обувь': kbShoeCat,
     'Верх': kbUpCat,

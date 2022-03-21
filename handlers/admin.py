@@ -7,11 +7,11 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from DatabaseHandler import DBcontroller
+from LoggerHandler import AdminLogger
 
 adminId = {1256578670: 'David',
            292667494: 'Alan',
            5188975607: 'bot'}
-
 
 class FSMAdmin(StatesGroup):
     category = State()
@@ -31,9 +31,11 @@ class FSMAdmin(StatesGroup):
 # @dp.message_handler(Text(equals='отмена', ignore_case=True), state=FSMAdmin.GroupStates['addCloth'])
 async def cancelAdd(message: types.Message, state: FSMContext):
     if message.from_user.id in adminId.keys():
+        AdminLogger.info(f'{message.chat.id} exit admin panel')
         print('cancel admin panel')
     await message.reply('Отмена')
     await state.finish()
+
 
 # # @dp.message_handler(state=FSMAdmin.GroupStates['addCloth'], commands='назад')
 # # @dp.message_handler(Text(equals='назад', ignore_case=True), state=FSMAdmin.GroupStates['addCloth'])
@@ -47,6 +49,7 @@ async def cancelAdd(message: types.Message, state: FSMContext):
 async def admLogin(message: types.Message, logged=False):
     if message.from_user.id in adminId.keys():
         if not logged:
+            AdminLogger.info(f'{adminId[message.from_user.id]} entered admin panel')
             print(adminId[message.from_user.id], 'on admin panel')
         await bot.send_message(message.chat.id, 'Успешный вход на панель админа',
                                reply_markup=adminKbDict['adminPanelInline'])
@@ -57,6 +60,7 @@ async def admLogin(message: types.Message, logged=False):
 # @dp.callback_query_handler(text='addCloth')
 async def startAdding(call: types.CallbackQuery):
     await call.message.edit_text('Добавление вещи...')
+    AdminLogger.info(f'{adminId[call.from_user.id]} started to add new Cloth')
     catKb = otherKbDict['main']
     catKb.one_time_keyboard = True
     await bot.send_message(call.from_user.id, 'Выберите категорию', reply_markup=otherKbDict['main'])
@@ -155,8 +159,10 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
 
 # @dp.callback_query_handler(state=FSMAdmin.photo,text='returnToAdmin')
 async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer('start adding new cloth', show_alert=False)
     async with state.proxy() as data:
         DBcontroller.addCloth(data)
+
     await state.finish()
     await admLogin(callback.message, True)
 

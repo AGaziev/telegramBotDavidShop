@@ -1,17 +1,15 @@
 from DatabaseHandler.firebaseConfigure import db
+from LoggerHandler import DBLogger
 
 showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size']
-
-
 def addCloth(data: dict):
     # print(data)
+    DBLogger.info(
+        f'Adding new cloth in base {data["category"]},{data["subCategory"]} with name: {data["brand"]} \"{data["name"]}\"')
     db.child('CLOTHES').child(data['category']).child(data['subCategory']).push(
         {k: v for k, v in data.items() if k in showInfo})
-    print('kek')
     getNumberOfClothes([data['category'], data['subCategory']])
     updateAllClothesCounter()
-
-
 
 
 def getDbPath(path: list):
@@ -25,9 +23,7 @@ def getNumberOfClothes(path: list):
     count = 0
     if db.child(getDbPath(path)).get().each() is not None:
         count = len(db.child(getDbPath(path)).get().each())
-    print(count)
-    print(path)
-    db.child('statistics/'+getDbPath(path)).set(count)
+    db.child('statistics/' + getDbPath(path)).set(count)
     return count
 
 
@@ -44,10 +40,12 @@ def updateAllClothesCounter():
         if category.key() != 'ALL':
             clothesCount += getMainCategoryCount(category.key())
     db.child('statistics/CLOTHES/ALL').set(clothesCount)
+    DBLogger.info('Updated Counter of all clothes')
     return clothesCount
 
-example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
-           'condition': 'Отличное',
-           'photo': ['AgACAgIAAxkBAAIEnWI1DS_Sc-UfHR_S939ULbzFcZxPAALTvzEbEB-oSZkTqTje8FlOAQADAgADeQADIwQ'],
-           'size': 'M'}
+
+# example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
+#            'condition': 'Отличное',
+#            'photo': ['AgACAgIAAxkBAAIEnWI1DS_Sc-UfHR_S939ULbzFcZxPAALTvzEbEB-oSZkTqTje8FlOAQADAgADeQADIwQ'],
+#            'size': 'M'}
 # addCloth(example)
