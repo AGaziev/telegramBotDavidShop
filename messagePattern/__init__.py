@@ -1,1 +1,1 @@
-from messagePattern.patternCreator import replyPatterns
+from messagePattern.patternCreator import replyPatterns,getCategoryInfo,getSubCategoryInfo

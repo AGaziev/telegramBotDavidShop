@@ -2,6 +2,8 @@ from DatabaseHandler.firebaseConfigure import db
 from LoggerHandler import DBLogger
 
 showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size']
+
+
 def addCloth(data: dict):
     # print(data)
     DBLogger.info(
@@ -29,8 +31,9 @@ def getNumberOfClothes(path: list):
 
 def getMainCategoryCount(category):
     categoryCount = 0
-    for subCategoryCounter in db.child('statistics/CLOTHES/' + category).get().each():
-        categoryCount += subCategoryCounter.val()
+    if db.child('statistics/CLOTHES/' + category).get().each() is not None:
+        for subCategoryCounter in db.child('statistics/CLOTHES/' + category).get().each():
+            categoryCount += subCategoryCounter.val()
     return categoryCount
 
 
@@ -42,7 +45,6 @@ def updateAllClothesCounter():
     db.child('statistics/CLOTHES/ALL').set(clothesCount)
     DBLogger.info('Updated Counter of all clothes')
     return clothesCount
-
 
 # example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
 #            'condition': 'Отличное',

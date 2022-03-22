@@ -159,10 +159,9 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
 
 # @dp.callback_query_handler(state=FSMAdmin.photo,text='returnToAdmin')
 async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
-    await callback.answer('start adding new cloth', show_alert=False)
+    await callback.answer('end adding new cloth', show_alert=False)
     async with state.proxy() as data:
         DBcontroller.addCloth(data)
-
     await state.finish()
     await admLogin(callback.message, True)
 
