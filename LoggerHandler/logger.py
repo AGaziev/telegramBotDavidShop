@@ -8,7 +8,7 @@ LOG_FILE = "secondRoomBot.log"
 
 
 def get_console_handler():
-    consoleHandler = logging.StreamHandler(sys.stdout)
+    consoleHandler = logging.StreamHandler(sys.stderr)
     consoleHandler.setFormatter(FORMATTER)
     return consoleHandler
 

@@ -24,9 +24,20 @@ ikbUp.add(*upBut)
 downBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Низ'])
 ikbDown = InlineKeyboardMarkup()
 ikbDown.add(*downBut)
+
+# flip = [
+#     ('<<', 'previous'),
+#     ('>>', 'next'),
+#     ('Назад', 'back')
+# ]
+# flipBut = (InlineKeyboardButton(text, callback_data=data) for text, data in flip)
+# ikbFlip = InlineKeyboardMarkup()
+# ikbFlip.add(*flipBut)
+
 # Словарь с клавиатурами
 clientKbDict = {
     'start': kbStart,
+    # 'flip': ikbFlip,
     'main': ikbMain,
     'Обувь': ikbShoe,
     'Верх': ikbUp,

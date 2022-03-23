@@ -46,6 +46,13 @@ def updateAllClothesCounter():
     DBLogger.info('Updated Counter of all clothes')
     return clothesCount
 
+
+def getClothesList(path: list) -> dict:
+    if db.child(getDbPath(path)).get().val() is None:
+        return {}
+    else:
+        return db.child(getDbPath(path)).get().val()
+
 # example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
 #            'condition': 'Отличное',
 #            'photo': ['AgACAgIAAxkBAAIEnWI1DS_Sc-UfHR_S939ULbzFcZxPAALTvzEbEB-oSZkTqTje8FlOAQADAgADeQADIwQ'],
