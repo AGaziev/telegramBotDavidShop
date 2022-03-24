@@ -20,8 +20,9 @@ def getSubCategoryInfo(category):
     return text
 
 def getClothInfo(data: dict):
+    name = (f'\"{data["name"]}\"' if data["name"] != '' else '')
     return f'{data["subCategory"]}\n' \
-           f'{data["brand"]} \"{data["name"]}\"\n' \
+           f'{data["brand"]} {name}\"\n' \
            f'Стоимость: {data["price"]}\n' \
            f'Состояние: {data["condition"]}\n' \
            f'Размер: {data["size"]}\n'

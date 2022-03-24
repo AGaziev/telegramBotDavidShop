@@ -9,21 +9,23 @@ kbStart.add(*startBut)
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+backBut = InlineKeyboardButton('Назад', callback_data='back')
+
 mainBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category.keys())
 ikbMain = InlineKeyboardMarkup()
-ikbMain.add(*mainBut)
+ikbMain.add(*mainBut).add(backBut)
 
 shoeBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Обувь'])
 ikbShoe = InlineKeyboardMarkup()
-ikbShoe.add(*shoeBut)
+ikbShoe.add(*shoeBut).add(backBut)
 
 upBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Верх'])
 ikbUp = InlineKeyboardMarkup()
-ikbUp.add(*upBut)
+ikbUp.add(*upBut).add(backBut)
 
 downBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Низ'])
 ikbDown = InlineKeyboardMarkup()
-ikbDown.add(*downBut)
+ikbDown.add(*downBut).add(backBut)
 
 # flip = [
 #     ('<<', 'previous'),
