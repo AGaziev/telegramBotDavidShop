@@ -97,8 +97,10 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
             show['countOfCloths'] = getNumberOfClothes([show['category'], show['subCategory']])
             show['currentClothMessages'] = list(await bot.send_media_group(callback.message.chat.id,
                                                                            media=await createMediaGroup(cloth,
-                                                                                            show['currentCloth']+1,
-                                                                                            show['countOfCloths'])))
+                                                                                                        show[
+                                                                                                            'currentCloth'] + 1,
+                                                                                                        show[
+                                                                                                            'countOfCloths'])))
             print()
             await FSMClient.next()
         else:
@@ -108,26 +110,35 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
 # @dp.message_handler(Text(equals=['<<', '>>']), state=FSMClient.showClothes)
 async def getAnother(message: types.Message, state: FSMContext):
     async with state.proxy() as show:
-        if message.text == '<<' and show['currentCloth'] > 0:
-            for msg in show['currentClothMessages']:
-                await msg.delete()
-            show['currentCloth'] -= 1
-        elif message.text == '>>' and show['currentCloth'] < show['countOfCloths'] - 1:
-            for msg in show['currentClothMessages']:
-                await msg.delete()
-            show['currentCloth'] += 1
+        current = show['currentCloth']
+        for msg in show['currentClothMessages']:
+            await msg.delete()
+        if message.text == '<<':
+            show['currentCloth'] = await checkIter(current - 1, show['countOfCloths'])
+        elif message.text == '>>':
+            show['currentCloth'] = await checkIter(current + 1, show['countOfCloths'])
         cloth = list(show['clothes'].values())[show['currentCloth']]
         show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
         show['currentClothMessages'] = \
             list(await bot.send_media_group(message.chat.id,
-                                            media=await createMediaGroup(cloth, show['currentCloth']+1,
+                                            media=await createMediaGroup(cloth, show['currentCloth'] + 1,
                                                                          show['countOfCloths'])))
+
+
+async def checkIter(current, total):
+    if current < 0:
+        return total - 1
+    elif current == total:
+        return 0
+    else:
+        return current
 
 
 async def createMediaGroup(cloth, current, total):
     media = MediaGroup()
     for i in range(len(cloth['photo'])):
-        media.attach_photo(types.InputMediaPhoto(cloth['photo'][i], caption=getClothInfo(cloth,current,total) if i == 0 else ''))
+        media.attach_photo(
+            types.InputMediaPhoto(cloth['photo'][i], caption=getClothInfo(cloth, current, total) if i == 0 else ''))
     return media
 
 
