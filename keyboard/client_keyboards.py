@@ -1,4 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
+from DatabaseHandler import getNumberOfClothes
 
 from keyboard import other_keyboards
 
@@ -15,17 +16,18 @@ mainBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyb
 ikbMain = InlineKeyboardMarkup()
 ikbMain.add(*mainBut).add(backBut)
 
-shoeBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Обувь'])
-ikbShoe = InlineKeyboardMarkup()
-ikbShoe.add(*shoeBut).add(backBut)
+# shoeBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Обувь'])
+# ikbShoe = InlineKeyboardMarkup()
+# ikbShoe.add(*shoeBut).add(backBut)
+#
+# upBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Верх'])
+# ikbUp = InlineKeyboardMarkup()
+# ikbUp.add(*upBut).add(backBut)
+#
+# downBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Низ'])
+# ikbDown = InlineKeyboardMarkup()
+# ikbDown.add(*downBut).add(backBut)
 
-upBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Верх'])
-ikbUp = InlineKeyboardMarkup()
-ikbUp.add(*upBut).add(backBut)
-
-downBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Низ'])
-ikbDown = InlineKeyboardMarkup()
-ikbDown.add(*downBut).add(backBut)
 
 # flip = [
 #     ('<<', 'previous'),
@@ -36,12 +38,21 @@ ikbDown.add(*downBut).add(backBut)
 # ikbFlip = InlineKeyboardMarkup()
 # ikbFlip.add(*flipBut)
 
+def getSubCategoryKb(category):
+    subCatKb = InlineKeyboardMarkup()
+    for subCategory in other_keyboards.category[category]:
+        if getNumberOfClothes([category, subCategory]) != 0:
+            subCatKb.add(InlineKeyboardButton(subCategory,callback_data=subCategory))
+    subCatKb.row(backBut)
+    return subCatKb
+
+
 # Словарь с клавиатурами
 clientKbDict = {
     'start': kbStart,
     # 'flip': ikbFlip,
     'main': ikbMain,
-    'Обувь': ikbShoe,
-    'Верх': ikbUp,
-    'Низ': ikbDown
+    # 'Обувь': ikbShoe,
+    # 'Верх': ikbUp,
+    # 'Низ': ikbDown
 }

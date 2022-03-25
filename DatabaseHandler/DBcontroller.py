@@ -21,11 +21,14 @@ def getDbPath(path: list):
     return dbPath
 
 
-def getNumberOfClothes(path: list):
-    count = 0
-    if db.child(getDbPath(path)).get().each() is not None:
-        count = len(db.child(getDbPath(path)).get().each())
-    db.child('statistics/' + getDbPath(path)).set(count)
+def getNumberOfClothes(path: list, justCheck=False):
+    clothes = db.child(getDbPath(path)).get().each()
+    if clothes is not None:
+        count = len(clothes)
+    else:
+        count = 0
+    if not justCheck:
+        db.child('statistics/' + getDbPath(path)).set(count)
     return count
 
 

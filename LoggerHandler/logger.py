@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 FORMATTER = logging.Formatter(
     "%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s")
-LOG_FILE = "secondRoomBot.log"
+LOG_FILE = "secondRoomBotDebug.log"
 
 
 def get_console_handler():
@@ -29,5 +29,6 @@ def get_logger(logger_name: str):
 
 
 DBLogger = get_logger('Database')
+ClientLogger = get_logger('Client')
 AdminLogger = get_logger('Administration')
 InitLogger = get_logger("Initialization")
