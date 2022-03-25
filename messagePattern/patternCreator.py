@@ -16,13 +16,17 @@ def getCategoryInfo():
 def getSubCategoryInfo(category):
     text = 'Количество вещей в каждой подкатегории\n'
     for subcategory in catList[category]:
-        text += f'{subcategory} - {getNumberOfClothes([category, subcategory])}\n'
+        count = getNumberOfClothes([category, subcategory], justCheck=True)
+        if count != 0:
+            text += f'{subcategory} - {count}\n'
     return text
 
-def getClothInfo(data: dict):
+
+def getClothInfo(data: dict, current, total):
     name = (f'\"{data["name"]}\"' if data["name"] != '' else '')
-    return f'{data["subCategory"]}\n' \
-           f'{data["brand"]} {name}\"\n' \
+    return f'{current}/{total}\n' \
+           f'{data["subCategory"]}\n' \
+           f'{data["brand"]} {name}\n' \
            f'Стоимость: {data["price"]}\n' \
            f'Состояние: {data["condition"]}\n' \
            f'Размер: {data["size"]}\n'
