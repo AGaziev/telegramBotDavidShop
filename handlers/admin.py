@@ -50,7 +50,6 @@ async def admLogin(message: types.Message, logged=False):
     if message.from_user.id in adminId.keys():
         if not logged:
             AdminLogger.info(f'{adminId[message.from_user.id]} entered admin panel')
-            print(adminId[message.from_user.id], 'on admin panel')
         await bot.send_message(message.chat.id, 'Успешный вход на панель админа',
                                reply_markup=adminKbDict['adminPanelInline'])
     else:
