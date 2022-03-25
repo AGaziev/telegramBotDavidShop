@@ -150,7 +150,7 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             if 'photo' not in data:
                 data['photo'] = []
-            data['photo'].append(message.photo[3].file_id)
+            data['photo'].append(message.photo[0].file_id)
     kbAddPhoto = InlineKeyboardMarkup()
     kbAddPhoto.add(InlineKeyboardButton('Нет', callback_data='returnToAdmin'))
     await bot.send_message(message.chat.id, 'Ещё фото?', reply_markup=kbAddPhoto)
