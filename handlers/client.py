@@ -62,12 +62,15 @@ async def catalogEvent(message: types.Message):
 # @dp.callback_query_handler(text=['Обувь','Верх','Низ'], state=FSMClient.categorySelect)
 async def subcategorySelect(callback: types.CallbackQuery, state: FSMContext, returned=False,
                             message: types.Message = None):
-    if callback is not None:
-        await callback.answer()
-        async with state.proxy() as show:
-            show['category'] = callback.data
+    await callback.answer()
+    async with state.proxy() as show:
+        show['category'] = callback.data
+    try:
         await callback.message.edit_text(text=getSubCategoryInfo(callback.data) + '\nВыберите подкатегорию',
                                          reply_markup=getSubCategoryKb(callback.data))
+    except Exception:
+        print(Exception, callback)
+
     await FSMClient.next()
 
 
@@ -101,7 +104,6 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
                                                                                                             'currentCloth'] + 1,
                                                                                                         show[
                                                                                                             'countOfCloths'])))
-            print()
             await FSMClient.next()
         else:
             ClientLogger.error(f'Не найдено вещей в категории {show["subCategory"]}')
