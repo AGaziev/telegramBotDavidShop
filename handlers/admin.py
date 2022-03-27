@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from DatabaseHandler import DBcontroller
-from LoggerHandler import AdminLogger
+from LoggerHandler import AdminLogger, InitLogger
 
 adminId = { 1256578670:  'David',
             292667494:   'Alan',
@@ -185,4 +185,4 @@ def register_handlers():
     dp.register_callback_query_handler(returnToAdminPanel, state=FSMAdmin.photo, text='returnToAdmin')
     dp.register_message_handler(endAddingCloth, content_types=['photo'], state=FSMAdmin.photo)
     ###
-    print('registered Admin handlers')
+    InitLogger.info('admin handlers registered')

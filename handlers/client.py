@@ -185,4 +185,4 @@ def register_handlers():
     dp.register_callback_query_handler(showClothes, state=FSMClient.subCategorySelect)
     dp.register_message_handler(getAnother, Text(equals=['<<', '>>']), state=FSMClient.showClothes)
     dp.register_message_handler(default, lambda message: message not in usedCommands)
-    InitLogger
+    InitLogger.info('client handlers registered')
