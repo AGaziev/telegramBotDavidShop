@@ -1,4 +1,5 @@
 from DatabaseHandler.firebaseConfigure import db
 from DatabaseHandler import DBcontroller
 from DatabaseHandler import firebaseConfigure
-from DatabaseHandler.DBcontroller import getMainCategoryCount,getNumberOfClothes, getClothesList, deleteCloth
+from DatabaseHandler.DBcontroller import getMainCategoryCount, getNumberOfClothes, getClothesList, deleteCloth
+from DatabaseHandler.DBcontroller import totalUpdate

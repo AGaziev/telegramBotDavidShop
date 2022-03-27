@@ -1,6 +1,8 @@
 from DatabaseHandler.firebaseConfigure import db
 from LoggerHandler import DBLogger
 
+# from keyboard import category as categoryList
+
 showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size']
 
 
@@ -18,7 +20,7 @@ def deleteCloth(path: list):
     DBLogger.info(
         f'Deleting cloth from base {path[0]},{path[1]} with id: {path[2]}')
     db.child(getDbPath(path)).remove()
-    getNumberOfClothes(path[0], path[1])
+    getNumberOfClothes([path[0], path[1]])
     updateAllClothesCounter()
 
 
@@ -63,6 +65,20 @@ def getClothesList(path: list) -> dict:
         return {}
     else:
         return db.child(getDbPath(path)).get().val()
+
+
+def totalUpdate():
+    for cat, subcat in categoryList.items():
+        for sub in subcat:
+            getNumberOfClothes([cat, sub])
+    updateAllClothesCounter()
+
+
+categoryList = {
+    'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
+    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер'),
+    'Низ': ('Спортивные', 'Обычные')
+}
 
 # example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
 #            'condition': 'Отличное',

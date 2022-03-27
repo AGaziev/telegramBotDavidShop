@@ -21,10 +21,10 @@ def getSubCategoryInfo(category):
                                    justCheck=True)
         if count != 0:
             text += f'{subcategory} - {count}\n'
-    if text=='':
+    if text == '':
         text = 'Нет вещей в выбранной категории\n'
 
-    return start+text
+    return start + text
 
 
 def getClothInfo(data: dict, current, total):

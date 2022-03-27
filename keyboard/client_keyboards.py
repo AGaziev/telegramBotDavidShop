@@ -16,6 +16,7 @@ mainBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyb
 ikbMain = InlineKeyboardMarkup()
 ikbMain.add(*mainBut).add(backBut)
 
+
 # shoeBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category['Обувь'])
 # ikbShoe = InlineKeyboardMarkup()
 # ikbShoe.add(*shoeBut).add(backBut)
@@ -42,7 +43,7 @@ def getSubCategoryKb(category):
     subCatKb = InlineKeyboardMarkup()
     for subCategory in other_keyboards.category[category]:
         if getNumberOfClothes([category, subCategory]) != 0:
-            subCatKb.add(InlineKeyboardButton(subCategory,callback_data=subCategory))
+            subCatKb.add(InlineKeyboardButton(subCategory, callback_data=subCategory))
     subCatKb.row(backBut)
     return subCatKb
 

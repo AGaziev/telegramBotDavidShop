@@ -10,7 +10,7 @@ from keyboard import clientKbDict, getSubCategoryKb
 from keyboard import category as categoryList
 from handlers.admin import adminId
 from DatabaseHandler import getClothesList, getNumberOfClothes, deleteCloth as delFromBase
-from LoggerHandler import ClientLogger
+from LoggerHandler import ClientLogger, InitLogger
 
 usedCommands = ['/start', '/help']
 
@@ -119,12 +119,7 @@ async def getAnother(message: types.Message, state: FSMContext, afterDelete=Fals
             show['currentCloth'] = await checkIter(current - 1, show['countOfCloths'])
         elif message.text == '>>':
             show['currentCloth'] = await checkIter(current + 1, show['countOfCloths'])
-        cloth = list(show['clothes'].values())[show['currentCloth']]
-        show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
-        show['currentClothMessages'] = \
-            list(await bot.send_media_group(message.chat.id,
-                                            media=await createMediaGroup(cloth, show['currentCloth'] + 1,
-                                                                         show['countOfCloths'])))
+        await sendCurrentCloth(message, show)
         print(show['currentClothMessages'])
 
 
@@ -152,13 +147,17 @@ async def deleteCloth(message: types.Message, state: FSMContext):
             await FSMClient.previous()
             return
         else:
-            show['countOfCloths']-=1
-            cloth = list(show['clothes'].values())[show['currentCloth']]
-            show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
-            show['currentClothMessages'] = \
-                list(await bot.send_media_group(message.chat.id,
-                                                media=await createMediaGroup(cloth, show['currentCloth'] + 1,
-                                                                             show['countOfCloths'])))
+            await sendCurrentCloth(message, show)
+
+
+async def sendCurrentCloth(message, show):
+    show['countOfCloths'] -= 1
+    cloth = list(show['clothes'].values())[show['currentCloth']]
+    show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
+    show['currentClothMessages'] = \
+        list(await bot.send_media_group(message.chat.id,
+                                        media=await createMediaGroup(cloth, show['currentCloth'] + 1,
+                                                                     show['countOfCloths'])))
 
 
 async def createMediaGroup(cloth, current, total):
@@ -186,4 +185,4 @@ def register_handlers():
     dp.register_callback_query_handler(showClothes, state=FSMClient.subCategorySelect)
     dp.register_message_handler(getAnother, Text(equals=['<<', '>>']), state=FSMClient.showClothes)
     dp.register_message_handler(default, lambda message: message not in usedCommands)
-    print('registered Client handlers')
+    InitLogger
