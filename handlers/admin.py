@@ -9,9 +9,10 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from DatabaseHandler import DBcontroller
 from LoggerHandler import AdminLogger
 
-adminId = {1256578670: 'David',
-           292667494: 'Alan',
-           5188975607: 'bot'}
+adminId = { 1256578670:  'David',
+            292667494:   'Alan',
+            5188975607:  'bot',
+            799573239:   'Kirill'}
 
 class FSMAdmin(StatesGroup):
     category = State()
@@ -70,7 +71,6 @@ async def startAdding(call: types.CallbackQuery):
 
 # @dp.message_handler(Text(equals=category.keys(), ignore_case=False), state=FSMAdmin.category)
 async def chooseSubCategory(message: types.Message, state: FSMContext):
-    # await message.delete_reply_markup()
     async with state.proxy() as data:
         data['category'] = message.text
     await FSMAdmin.next()

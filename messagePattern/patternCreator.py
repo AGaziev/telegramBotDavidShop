@@ -14,12 +14,17 @@ def getCategoryInfo():
 
 
 def getSubCategoryInfo(category):
-    text = 'Количество вещей в каждой подкатегории\n'
+    start = 'Количество вещей в каждой подкатегории\n'
+    text = ''
     for subcategory in catList[category]:
-        count = getNumberOfClothes([category, subcategory], justCheck=True)
+        count = getNumberOfClothes([category, subcategory],
+                                   justCheck=True)
         if count != 0:
             text += f'{subcategory} - {count}\n'
-    return text
+    if text=='':
+        text = 'Нет вещей в выбранной категории\n'
+
+    return start+text
 
 
 def getClothInfo(data: dict, current, total):

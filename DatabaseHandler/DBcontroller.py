@@ -14,6 +14,14 @@ def addCloth(data: dict):
     updateAllClothesCounter()
 
 
+def deleteCloth(path: list):
+    DBLogger.info(
+        f'Deleting cloth from base {path[0]},{path[1]} with id: {path[2]}')
+    db.child(getDbPath(path)).remove()
+    getNumberOfClothes(path[0], path[1])
+    updateAllClothesCounter()
+
+
 def getDbPath(path: list):
     dbPath = '/CLOTHES'
     for child in path:
