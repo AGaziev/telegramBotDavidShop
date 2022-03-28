@@ -115,7 +115,7 @@ async def getAnother(message: types.Message, state: FSMContext, afterDelete=Fals
         current = show['currentCloth']
         for msg in show['currentClothMessages']:
             await msg.delete()
-        if message.text == '<<' or afterDelete:
+        if message.text == '<<':
             show['currentCloth'] = await checkIter(current - 1, show['countOfCloths'])
         elif message.text == '>>':
             show['currentCloth'] = await checkIter(current + 1, show['countOfCloths'])
@@ -148,6 +148,7 @@ async def deleteCloth(message: types.Message, state: FSMContext):
             return
         else:
             show['countOfCloths'] -= 1
+            show['currentCloth'] -= 1
             await sendCurrentCloth(message, show)
 
 
