@@ -1,1 +1,1 @@
-from serviceAccountData.decryptKey import getKey
+from decryptKey import getKey
