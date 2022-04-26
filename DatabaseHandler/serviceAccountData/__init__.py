@@ -1,1 +1,1 @@
-from decryptKey import getKey
+from DatabaseHandler.serviceAccountData.decryptKey import getKey
