@@ -1,6 +1,6 @@
 import pyrebase
 import os
-from serviceAccountData import getKey
+from DatabaseHandler.serviceAccountData import getKey
 
 with open('secondroomdb-bf3f10c9f6a1.json', 'w') as key:
     key.write(getKey())
