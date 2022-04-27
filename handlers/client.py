@@ -49,7 +49,8 @@ async def back(message: types.Message, state: FSMContext):
     print(type(current_state))
     print(current_state)
     print(current_state == "FSMClient:showClothes")
-    if current_state is 'FSMClient:showClothes':
+    if current_state == 'FSMClient:showClothes':
+        print('yeaaah')
         async with state.proxy() as show:
             await bot.send_message(message.chat.id,
                                    text=getSubCategoryInfo(show['subCategory']) + '\nВыберите подкатегорию',
