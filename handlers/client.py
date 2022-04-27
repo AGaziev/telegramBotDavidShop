@@ -190,7 +190,7 @@ def register_handlers():
     dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True))
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True))
     dp.register_message_handler(back, Text(equals='Назад', ignore_case=True), state='*')
-    dp.register_callback_query_handler(backCallback, text='back', state='*')
+    dp.register_callback_query_handler(backCallback, text=['back','backToCat'], state='*')
     dp.register_message_handler(deleteCloth, IDFilter(adminId), Text(equals='удалить', ignore_case=True),
                                 state=FSMClient.showClothes)
     dp.register_callback_query_handler(subcategorySelect, text=['Обувь', 'Верх', 'Низ'], state=FSMClient.categorySelect)

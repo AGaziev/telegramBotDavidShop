@@ -11,6 +11,7 @@ kbStart.add(*startBut)
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 backBut = InlineKeyboardButton('Назад', callback_data='back')
+backCatBut = InlineKeyboardButton('Назад', callback_data='backToCat')
 
 mainBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category.keys())
 ikbMain = InlineKeyboardMarkup()
@@ -44,8 +45,6 @@ def getSubCategoryKb(category):
     for subCategory in other_keyboards.category[category]:
         if getNumberOfClothes([category, subCategory]) != 0:
             subCatKb.add(InlineKeyboardButton(subCategory, callback_data=subCategory))
-    backCatBut = backBut
-    backCatBut.callback_data = 'backToCat'
     subCatKb.row(backCatBut)
     return subCatKb
 
