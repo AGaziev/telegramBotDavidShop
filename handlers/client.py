@@ -28,26 +28,38 @@ class FSMClient(StatesGroup):
 # @dp.message_handler(Text(equals='информация', ignore_case=True))
 async def info(message: types.Message):
     await bot.send_message(message.chat.id, 'Главный - +79097865289 (Давид)\n'
-                                            'Если заметили некорректную работу бота пишите программисту - +79506744918')
+                                            'Если заметили некорректную работу бота, пишите - @vcdddk')
 
 
-# @dp.callback_query_handler(text='back',state='*')
+# @dp.callback_query_handler(text=['back','backToCat'],state='*')
 async def backCallback(callback: types.CallbackQuery, state: FSMContext):
+    if callback.data == 'backToCat':
+        await callback.message.edit_text(text=getSubCategoryInfo(callback.data) + '\nВыберите подкатегорию',
+                                         reply_markup=getSubCategoryKb(callback.data))
+        await FSMClient.categorySelect.set()
+    else:
+        await back(callback.message, state)
     await callback.answer()
-    await back(callback.message, state)
 
 
 # @dp.message_handler(Text(equals='Назад', ignore_case=True),state='*')
 async def back(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Возвращаюсь...', reply_markup=types.ReplyKeyboardRemove())
-    await state.finish()
-    await start(message)
+    if state == FSMClient.showClothes:
+        async with state.proxy() as show:
+            await bot.send_message(message.chat.id,
+                                   text=getSubCategoryInfo(show['subCategory']) + '\nВыберите подкатегорию',
+                                   reply_markup=getSubCategoryKb(show['subCategory']))
+        await FSMClient.subCategorySelect.set()
+    else:
+        await state.finish()
+        await start(message)
 
 
 # @dp.message_handler(commands=['start','help'])
 async def start(message: types.Message):
     await bot.send_message(message.chat.id,
-                           text='''Привет, это бот-каталог вещей магазина SecondRoom''',
+                           text='Привет, это бот-каталог вещей магазина SecondRoom',
                            reply_markup=clientKbDict['start'])
 
 
@@ -67,8 +79,8 @@ async def subcategorySelect(callback: types.CallbackQuery, state: FSMContext):
     try:
         await callback.message.edit_text(text=getSubCategoryInfo(callback.data) + '\nВыберите подкатегорию',
                                          reply_markup=getSubCategoryKb(callback.data))
-    except Exception:
-        print(Exception, callback)
+    except Exception as e:
+        print(e, callback)
 
     await FSMClient.next()
 
@@ -100,10 +112,8 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
             show['countOfCloths'] = getNumberOfClothes([show['category'], show['subCategory']])
             show['currentClothMessages'] = list(await bot.send_media_group(callback.message.chat.id,
                                                                            media=await createMediaGroup(cloth,
-                                                                                                        show[
-                                                                                                            'currentCloth'] + 1,
-                                                                                                        show[
-                                                                                                            'countOfCloths'])))
+                                                                                                        show['currentCloth'] + 1,
+                                                                                                        show['countOfCloths'])))
             await FSMClient.next()
         else:
             ClientLogger.error(f'Не найдено вещей в категории {show["subCategory"]}')
@@ -148,7 +158,8 @@ async def deleteCloth(message: types.Message, state: FSMContext):
             return
         else:
             show['countOfCloths'] -= 1
-            show['currentCloth'] -= 1
+            if show['currentCloth'] != 1:
+                show['currentCloth'] -= 1
             await sendCurrentCloth(message, show)
 
 

@@ -44,7 +44,9 @@ def getSubCategoryKb(category):
     for subCategory in other_keyboards.category[category]:
         if getNumberOfClothes([category, subCategory]) != 0:
             subCatKb.add(InlineKeyboardButton(subCategory, callback_data=subCategory))
-    subCatKb.row(backBut)
+    backCatBut = backBut
+    backCatBut.callback_data = 'backToCat'
+    subCatKb.row(backCatBut)
     return subCatKb
 
 

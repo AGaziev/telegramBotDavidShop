@@ -153,7 +153,7 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
             data['photo'].append(message.photo[0].file_id)
     kbAddPhoto = InlineKeyboardMarkup()
     kbAddPhoto.add(InlineKeyboardButton('Нет', callback_data='returnToAdmin'))
-    await bot.send_message(message.chat.id, 'Ещё фото?', reply_markup=kbAddPhoto)
+    await bot.send_message(message.chat.id, 'Фото добавлено. Ещё фото?', reply_markup=kbAddPhoto)
 
 
 # @dp.callback_query_handler(state=FSMAdmin.photo,text='returnToAdmin')
