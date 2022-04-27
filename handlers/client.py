@@ -49,7 +49,7 @@ async def back(message: types.Message, state: FSMContext):
         await bot.send_message(message.chat.id,
                                text=getCategoryInfo() + '\nВыберите категорию',
                                reply_markup=clientKbDict['main'])
-        await FSMClient.subCategorySelect.set()
+        await FSMClient.categorySelect.set()
     else:
         await state.finish()
         await start(message)
