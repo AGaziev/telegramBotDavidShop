@@ -34,8 +34,9 @@ async def info(message: types.Message):
 # @dp.callback_query_handler(text=['back','backToCat'],state='*')
 async def backCallback(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'backToCat':
-        await callback.message.edit_text(text=getSubCategoryInfo(callback.data) + '\nВыберите подкатегорию',
-                                         reply_markup=getSubCategoryKb(callback.data))
+        async with state.proxy() as show:
+            await callback.message.edit_text(text=getCategoryInfo() + '\nВыберите категорию',
+                                             reply_markup=clientKbDict['main'])
         await FSMClient.categorySelect.set()
     else:
         await back(callback.message, state)
@@ -45,7 +46,7 @@ async def backCallback(callback: types.CallbackQuery, state: FSMContext):
 # @dp.message_handler(Text(equals='Назад', ignore_case=True),state='*')
 async def back(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Возвращаюсь...', reply_markup=types.ReplyKeyboardRemove())
-    if state == FSMClient.showClothes:
+    if state.get_state() == FSMClient.showClothes:
         async with state.proxy() as show:
             await bot.send_message(message.chat.id,
                                    text=getSubCategoryInfo(show['subCategory']) + '\nВыберите подкатегорию',
@@ -112,8 +113,10 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
             show['countOfCloths'] = getNumberOfClothes([show['category'], show['subCategory']])
             show['currentClothMessages'] = list(await bot.send_media_group(callback.message.chat.id,
                                                                            media=await createMediaGroup(cloth,
-                                                                                                        show['currentCloth'] + 1,
-                                                                                                        show['countOfCloths'])))
+                                                                                                        show[
+                                                                                                            'currentCloth'] + 1,
+                                                                                                        show[
+                                                                                                            'countOfCloths'])))
             await FSMClient.next()
         else:
             ClientLogger.error(f'Не найдено вещей в категории {show["subCategory"]}')
@@ -190,7 +193,7 @@ def register_handlers():
     dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True))
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True))
     dp.register_message_handler(back, Text(equals='Назад', ignore_case=True), state='*')
-    dp.register_callback_query_handler(backCallback, text=['back','backToCat'], state='*')
+    dp.register_callback_query_handler(backCallback, text=['back', 'backToCat'], state='*')
     dp.register_message_handler(deleteCloth, IDFilter(adminId), Text(equals='удалить', ignore_case=True),
                                 state=FSMClient.showClothes)
     dp.register_callback_query_handler(subcategorySelect, text=['Обувь', 'Верх', 'Низ'], state=FSMClient.categorySelect)
