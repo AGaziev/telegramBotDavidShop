@@ -46,9 +46,9 @@ async def backCallback(callback: types.CallbackQuery, state: FSMContext):
 async def back(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Возвращаюсь...', reply_markup=types.ReplyKeyboardRemove())
     current_state = await state.get_state()
-    print(state)
+    print(type(current_state))
     print(FSMClient.showClothes.get_root())
-    print(current_state is FSMClient.showClothes.get_root())
+    print(current_state is "FSMClient.showClothes")
     if current_state is FSMClient.showClothes:
         async with state.proxy() as show:
             await bot.send_message(message.chat.id,
