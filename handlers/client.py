@@ -34,9 +34,8 @@ async def info(message: types.Message):
 # @dp.callback_query_handler(text=['back','backToCat'],state='*')
 async def backCallback(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'backToCat':
-        async with state.proxy() as show:
-            await callback.message.edit_text(text=getCategoryInfo() + '\nВыберите категорию',
-                                             reply_markup=clientKbDict['main'])
+        await callback.message.edit_text(text=getCategoryInfo() + '\nВыберите категорию',
+                                         reply_markup=clientKbDict['main'])
         await FSMClient.categorySelect.set()
     else:
         await back(callback.message, state)
@@ -46,7 +45,8 @@ async def backCallback(callback: types.CallbackQuery, state: FSMContext):
 # @dp.message_handler(Text(equals='Назад', ignore_case=True),state='*')
 async def back(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Возвращаюсь...', reply_markup=types.ReplyKeyboardRemove())
-    if await state.get_state() == FSMClient.showClothes:
+    current_state = await state.get_state()
+    if current_state is FSMClient.showClothes:
         async with state.proxy() as show:
             await bot.send_message(message.chat.id,
                                    text=getSubCategoryInfo(show['subCategory']) + '\nВыберите подкатегорию',
