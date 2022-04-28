@@ -161,18 +161,13 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
 async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer('end adding new cloth', show_alert=False)
     async with state.proxy() as data:
-        await addUserInfo(callback,state)
-        DBcontroller.addCloth(data)
-    await state.finish()
-    await admLogin(callback.message, True)
-
-
-async def addUserInfo(callback: types.CallbackQuery, state: FSMContext):
-    async with state.proxy() as data:
         if callback.from_user.username is not None:
             data['user'] = f"@{callback.from_user.username}"
         else:
             data['user'] = '@biruytskovsky'
+        DBcontroller.addCloth(data)
+    await state.finish()
+    await admLogin(callback.message, True)
 
 
 def register_handlers():
