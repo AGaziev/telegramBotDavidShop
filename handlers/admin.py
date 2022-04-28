@@ -25,7 +25,7 @@ class FSMAdmin(StatesGroup):
     condition = State()
     photo = State()
     GroupStates = {
-        'addCloth': [category, subCategory, brand, name, price, size, condition, photo]
+        'addCloth': [category, subCategory, brand, name, price, size, condition, photo, user]
     }
 
 
