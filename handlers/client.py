@@ -27,7 +27,7 @@ class FSMClient(StatesGroup):
 
 # @dp.message_handler(Text(equals='информация', ignore_case=True))
 async def info(message: types.Message):
-    await bot.send_message(message.chat.id, 'Главный - +79097865289 (Давид)\n'
+    await bot.send_message(message.chat.id, 'Главный - @biruytskovsky\n'
                                             'Если заметили некорректную работу бота, пишите - @vcdddk')
 
 
