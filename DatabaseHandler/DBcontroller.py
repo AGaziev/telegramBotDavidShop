@@ -3,7 +3,7 @@ from LoggerHandler import DBLogger
 
 # from keyboard import category as categoryList
 
-showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size']
+showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size', 'user']
 
 
 def addCloth(data: dict):
