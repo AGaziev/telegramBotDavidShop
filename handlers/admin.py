@@ -99,7 +99,7 @@ async def chooseName(message: types.Message, state: FSMContext):
             data['brand'] = message.text
     else:
         async with state.proxy() as data:
-            data['brand'] = None
+            data['brand'] = 'None'
     await FSMAdmin.next()
     await bot.send_message(message.chat.id, 'Напишите название (\'-\' для пропуска)')
 
@@ -111,7 +111,7 @@ async def choosePrice(message: types.Message, state: FSMContext):
             data['name'] = message.text
     else:
         async with state.proxy() as data:
-            data['name'] = None
+            data['name'] = 'None'
     await FSMAdmin.next()
     await bot.send_message(message.chat.id, 'Напишите цену (\'-\' для пропуска)')
 
@@ -123,7 +123,7 @@ async def chooseSize(message: types.Message, state: FSMContext):
             data['price'] = message.text
     else:
         async with state.proxy() as data:
-            data['price'] = 'Бесплатно'
+            data['price'] = 'None'
     await FSMAdmin.next()
     await bot.send_message(message.chat.id, 'Напишите размер')
 

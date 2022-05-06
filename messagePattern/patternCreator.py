@@ -28,7 +28,7 @@ def getSubCategoryInfo(category):
 
 
 def getClothInfo(data: dict, current, total):
-    name = (f'\"{data["name"]}\"' if data["name"] != '' else '')
+    name = (f'\"{data["name"]}\"' if data["name"] != 'None' else '')
     return f'{current}/{total}\n' \
            f'{data["subCategory"]}\n' \
            f'{data["brand"]} {name}\n\n' \
