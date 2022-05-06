@@ -2,8 +2,8 @@ from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButt
 
 category = {
     'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
-    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Рубашка','Спортивные','Polo'),
-    'Низ': ('Спортивные', 'Обычные', 'Шорты')
+    'Верх': ( 'Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Рубашка', 'Спортивные', 'Polo'),
+    'Низ': ('Спортивные', 'Обычные', 'Шорты', 'Джинсы')
 }
 # buttons
 kbMainButs = (KeyboardButton(text=text) for text in category.keys())
