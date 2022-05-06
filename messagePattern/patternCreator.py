@@ -31,8 +31,8 @@ def getClothInfo(data: dict, current, total):
     name = (f'\"{data["name"]}\"' if data["name"] != '' else '')
     return f'{current}/{total}\n' \
            f'{data["subCategory"]}\n' \
-           f'{data["brand"]} {name}\n' \
-           f'{data["price"]}р\n' \
+           f'{data["brand"]} {name}\n\n' \
+           f'{data["price"]}\n\n' \
            f'Состояние: {data["condition"]}\n' \
            f'Размер: {data["size"]}\n' \
            f'За покупкой {data["user"]}'

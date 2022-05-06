@@ -12,7 +12,8 @@ from LoggerHandler import AdminLogger, InitLogger
 adminId = {1256578670: 'David',
            292667494: 'Alan',
            5188975607: 'bot',
-           799573239: 'Kirill'}
+           799573239: 'Kirill',
+           659638030: 'Koles'}
 
 
 class FSMAdmin(StatesGroup):
@@ -161,10 +162,10 @@ async def endAddingCloth(message: types.Message, state: FSMContext):
 async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer('end adding new cloth', show_alert=False)
     async with state.proxy() as data:
-        if callback.from_user.username is not None:
+        if callback.from_user.username is not None and callback.from_user.id != 292667494:
             data['user'] = f"@{callback.from_user.username}"
         else:
-            data['user'] = '@biruytskovsky'
+            data['user'] = '@biruytskovskynf'
         DBcontroller.addCloth(data)
     await state.finish()
     await admLogin(callback.message, True)

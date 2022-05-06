@@ -27,7 +27,7 @@ class FSMClient(StatesGroup):
 
 # @dp.message_handler(Text(equals='информация', ignore_case=True))
 async def info(message: types.Message):
-    await bot.send_message(message.chat.id, 'Главный - @biruytskovsky\n'
+    await bot.send_message(message.chat.id, 'Главный - @biruytskovskynf\n'
                                             'Если заметили некорректную работу бота, пишите - @vcdddk')
 
 
@@ -159,12 +159,13 @@ async def deleteCloth(message: types.Message, state: FSMContext):
             return
         else:
             show['countOfCloths'] -= 1
-            if show['currentCloth'] != 1:
+            if show['currentCloth'] != 0:
                 show['currentCloth'] -= 1
             await sendCurrentCloth(message, show)
 
 
 async def sendCurrentCloth(message, show):
+    print(show['currentCloth'])
     cloth = list(show['clothes'].values())[show['currentCloth']]
     show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
     show['currentClothMessages'] = \
@@ -199,3 +200,20 @@ def register_handlers():
     dp.register_message_handler(getAnother, Text(equals=['<<', '>>']), state=FSMClient.showClothes)
     dp.register_message_handler(default, lambda message: message not in usedCommands)
     InitLogger.info('client handlers registered')
+
+
+def register_handlers_debug():
+    dp.register_message_handler(start, commands=['start', 'help'], user_id=adminId.keys())
+    dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True), user_id=adminId.keys())
+    dp.register_message_handler(info, Text(equals='информация', ignore_case=True), user_id=adminId.keys())
+    dp.register_message_handler(back, Text(equals='Назад', ignore_case=True), state='*', user_id=adminId.keys())
+    dp.register_callback_query_handler(backCallback, text=['back', 'backToCat'], state='*', user_id=adminId.keys())
+    dp.register_message_handler(deleteCloth, IDFilter(adminId), Text(equals='удалить', ignore_case=True),
+                                state=FSMClient.showClothes, user_id=adminId.keys())
+    dp.register_callback_query_handler(subcategorySelect, text=['Обувь', 'Верх', 'Низ'], state=FSMClient.categorySelect,
+                                       user_id=adminId.keys())
+    dp.register_callback_query_handler(showClothes, state=FSMClient.subCategorySelect, user_id=adminId.keys())
+    dp.register_message_handler(getAnother, Text(equals=['<<', '>>']), state=FSMClient.showClothes,
+                                user_id=adminId.keys())
+    dp.register_message_handler(default, lambda message: message not in usedCommands, user_id=adminId.keys())
+    InitLogger.info('debug client handlers registered')

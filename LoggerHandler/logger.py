@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 FORMATTER = logging.Formatter(
     "%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s")
-LOG_FILE = "secondRoomBotDebug3.log"
+LOG_FILE = "secondRoomBotDebug2.log"
 
 
 def get_console_handler():
