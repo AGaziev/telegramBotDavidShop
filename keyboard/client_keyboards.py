@@ -41,10 +41,10 @@ ikbMain.add(*mainBut).add(backBut)
 # ikbFlip.add(*flipBut)
 
 def getSubCategoryKb(category):
-    subCatKb = InlineKeyboardMarkup()
+    subCatKb = InlineKeyboardMarkup(row_width=3)
     for subCategory in other_keyboards.category[category]:
         if getNumberOfClothes([category, subCategory]) != 0:
-            subCatKb.add(InlineKeyboardButton(subCategory, callback_data=subCategory))
+            subCatKb.insert(InlineKeyboardButton(subCategory, callback_data=subCategory))
     subCatKb.row(backCatBut)
     return subCatKb
 

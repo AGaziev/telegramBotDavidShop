@@ -165,7 +165,6 @@ async def deleteCloth(message: types.Message, state: FSMContext):
 
 
 async def sendCurrentCloth(message, show):
-    print(show['currentCloth'])
     cloth = list(show['clothes'].values())[show['currentCloth']]
     show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
     show['currentClothMessages'] = \
