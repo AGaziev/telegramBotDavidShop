@@ -15,7 +15,7 @@ if getenv("mode") == "debug":
 else:
     client.registerHandlers()
 other.registerHandlers()
-sideSeller.re
+sideSeller.registerHandlers()
 totalUpdateDB()
 
 executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
