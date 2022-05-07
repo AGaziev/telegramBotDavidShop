@@ -8,3 +8,7 @@
 /dataSources.local.xml
 # Log files
 .log
+# Cache files
+.pyc
+# Files for debug on local machine
+.debug
