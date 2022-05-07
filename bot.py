@@ -10,12 +10,12 @@ async def on_startup(_):
 from handlers import client, admin, other, sideSeller
 
 admin.registerHandlers()
+sideSeller.registerHandlers()
 if getenv("mode") == "debug":
     client.registerHandlersDebug()
 else:
     client.registerHandlers()
 other.registerHandlers()
-sideSeller.registerHandlers()
 totalUpdateDB()
 
 executor.start_polling(dp, skip_updates=True, on_startup=on_startup)

@@ -12,7 +12,7 @@ from handlers.admin import adminId
 from DatabaseHandler import getClothesList, getNumberOfClothes, deleteCloth as delFromBase
 from LoggerHandler import ClientLogger, InitLogger
 
-usedCommands = ['/start', '/help']
+usedCommands = ['/start', '/help','/login','/admin']
 
 subCategories = ['Кроссовки', 'Кеды', 'Тапки', 'Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто',
                  'Бомбер', 'Спортивные', 'Обычные']
