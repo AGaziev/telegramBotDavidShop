@@ -1,1 +1,1 @@
-from LoggerHandler.logger import DBLogger, AdminLogger, InitLogger, ClientLogger
+from LoggerHandler.logger import DBLogger, AdminLogger, InitLogger, ClientLogger, SellerLogger

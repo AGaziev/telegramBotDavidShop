@@ -1,8 +1,8 @@
-from aiogram import types, Dispatcher
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text, IDFilter
-from aiogram.types import CallbackQuery, MediaGroup
+from aiogram.types import MediaGroup
 
 from create_bot import dp, bot
 from messagePattern import replyPatterns, getCategoryInfo, getSubCategoryInfo, getClothInfo
@@ -186,7 +186,7 @@ async def default(message: types.Message):
     await bot.send_message(message.chat.id, replyPatterns['toStart'])
 
 
-def register_handlers():
+def registerHandlers():
     dp.register_message_handler(start, commands=['start', 'help'])
     dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True))
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True))
@@ -201,7 +201,7 @@ def register_handlers():
     InitLogger.info('client handlers registered')
 
 
-def register_handlers_debug():
+def registerHandlersDebug():
     dp.register_message_handler(start, commands=['start', 'help'], user_id=adminId.keys())
     dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True), user_id=adminId.keys())
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True), user_id=adminId.keys())

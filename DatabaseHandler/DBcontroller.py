@@ -74,9 +74,16 @@ def totalUpdate():
     updateAllClothesCounter()
 
 
+def getSellers():
+    try:
+        sellers = list(db.child('SideSellers').get().val().keys())
+    except AttributeError:
+        sellers = []
+    return sellers
+
 categoryList = {
     'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
-    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные','Polo'),
+    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные', 'Polo'),
     'Низ': ('Спортивные', 'Обычные', 'Шорты', 'Джинсы')
 }
 

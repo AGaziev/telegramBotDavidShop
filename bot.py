@@ -7,14 +7,15 @@ async def on_startup(_):
     print('Bot online!')
 
 
-from handlers import client, admin, other
+from handlers import client, admin, other, sideSeller
 
-admin.register_handlers()
+admin.registerHandlers()
 if getenv("mode") == "debug":
-    client.register_handlers_debug()
+    client.registerHandlersDebug()
 else:
-    client.register_handlers()
-other.register_handlers()
+    client.registerHandlers()
+other.registerHandlers()
+sideSeller.re
 totalUpdateDB()
 
 executor.start_polling(dp, skip_updates=True, on_startup=on_startup)

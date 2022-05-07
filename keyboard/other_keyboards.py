@@ -26,6 +26,8 @@ kbUpCat.add(*kbUpButs)
 # inline kbs
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+ikbSideSellersPanel = InlineKeyboardMarkup().add(InlineKeyboardButton('Добавить вещь',callback_data='addCloth'))
+
 # dict with keyboards
 otherKbDict = {
     'main': kbMainCat,

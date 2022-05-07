@@ -1,10 +1,10 @@
-from create_bot import bot, dp, fsm
+from create_bot import bot, dp
 from keyboard import adminKbDict, otherKbDict, category
-from aiogram import types, Dispatcher
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardRemove
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from DatabaseHandler import DBcontroller
 from LoggerHandler import AdminLogger, InitLogger
@@ -171,7 +171,7 @@ async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
     await admLogin(callback.message, True)
 
 
-def register_handlers():
+def registerHandlers():
     # cancel state handlers
     dp.register_message_handler(cancelAdd, commands='отмена', state=FSMAdmin.GroupStates['addCloth'])
     dp.register_message_handler(cancelAdd, Text(equals='отмена', ignore_case=True),
