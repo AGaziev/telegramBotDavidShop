@@ -18,6 +18,6 @@ async def selLogin(message: types.Message):
         await message.reply('У вас нет прав.')
 
 
-def sideSellerRegisterHandlers():
+def registerHandlers():
     dp.register_message_handler(selLogin, commands=['login'], state=None)
     InitLogger.info('sideSellers handlers registered')
