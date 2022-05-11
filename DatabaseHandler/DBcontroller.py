@@ -3,11 +3,10 @@ from LoggerHandler import DBLogger
 
 # from keyboard import category as categoryList
 
-showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size', 'user']
+showInfo = ['subCategory', 'brand', 'name', 'price', 'condition', 'photo', 'size', 'user', 'date']
 
 
 def addCloth(data: dict):
-    # print(data)
     DBLogger.info(
         f'Adding new cloth in base {data["category"]},{data["subCategory"]} with name: {data["brand"]} \"{data["name"]}\"')
     db.child('CLOTHES').child(data['category']).child(data['subCategory']).push(
@@ -81,9 +80,10 @@ def getSellers():
         sellers = []
     return sellers
 
+
 categoryList = {
     'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
-    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные', 'Polo'),
+    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные', 'Polo', 'Рубашка'),
     'Низ': ('Спортивные', 'Обычные', 'Шорты', 'Джинсы')
 }
 

@@ -1,13 +1,16 @@
-from create_bot import bot, dp
-from keyboard import adminKbDict, otherKbDict, category
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from create_bot import bot, dp
+from keyboard import adminKbDict, otherKbDict, category
 from DatabaseHandler import DBcontroller
 from LoggerHandler import AdminLogger, InitLogger
+
+import datetime
 
 adminId = {1256578670: 'David',
            292667494: 'Alan',
@@ -166,6 +169,7 @@ async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
             data['user'] = f"@{callback.from_user.username}"
         else:
             data['user'] = '@biruytskovskynf'
+        data['date'] = str(datetime.date.today())
         DBcontroller.addCloth(data)
     await state.finish()
     await admLogin(callback.message, True)

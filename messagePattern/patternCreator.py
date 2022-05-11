@@ -3,24 +3,28 @@ replyPatterns = {
 }
 
 from DatabaseHandler import getMainCategoryCount, getNumberOfClothes
+from DatabaseHandler import categoriesWithNew, subcatWithNew
 from keyboard import category as catList
+import datetime
 
 
-def getCategoryInfo():
+def getCategoryInfo(id):
     text = 'Количество вещей в каждой категории\n'
+    catWithNew = categoriesWithNew(id)
     for category in catList.keys():
-        text += f'{category} - {getMainCategoryCount(category)}\n'
+        text += f'{category} - {getMainCategoryCount(category)} {"NEW!" if category in catWithNew else ""}\n'
     return text
 
 
-def getSubCategoryInfo(category):
+def getSubCategoryInfo(category, id):
     start = 'Количество вещей в каждой подкатегории\n'
     text = ''
+    subcatsNew = subcatWithNew(id, category)
     for subcategory in catList[category]:
         count = getNumberOfClothes([category, subcategory],
                                    justCheck=True)
         if count != 0:
-            text += f'{subcategory} - {count}\n'
+            text += f'{subcategory} - {count} {"NEW!" if subcategory in subcatsNew else ""}\n'
     if text == '':
         text = 'Нет вещей в выбранной категории\n'
 
@@ -28,9 +32,19 @@ def getSubCategoryInfo(category):
 
 
 def getClothInfo(data: dict, current, total):
+    try:
+        date = data['date'].split('-')
+        date = list(map(int, date))
+        dateDiff = (datetime.date.today() - datetime.date(*date)).days
+        if dateDiff < 3:
+            dateText = ' NEW!'
+        else:
+            dateText = ''
+    except Exception as e:
+        dateText = ''
     name = (f'\"{data["name"]}\"' if data["name"] != 'None' else '')
     return f'{current}/{total}\n' \
-           f'{data["subCategory"]}\n' \
+           f'{data["subCategory"]}{dateText}\n' \
            f'{data["brand"]} {name}\n\n' \
            f'{data["price"]}\n\n' \
            f'Состояние: {data["condition"]}\n' \

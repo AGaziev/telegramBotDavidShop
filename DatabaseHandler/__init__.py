@@ -5,3 +5,4 @@ from DatabaseHandler.DBcontroller import getMainCategoryCount, getNumberOfClothe
 from DatabaseHandler.DBcontroller import getSellers
 from DatabaseHandler.DBcontroller import totalUpdate
 from DatabaseHandler.DBcontroller import categoryList
+from DatabaseHandler.userInfo import categoriesWithNew, checkUserRegistration, subcatWithNew, notNewAnymore

@@ -10,9 +10,10 @@ from keyboard import clientKbDict, getSubCategoryKb
 from keyboard import category as categoryList
 from handlers.admin import adminId
 from DatabaseHandler import getClothesList, getNumberOfClothes, deleteCloth as delFromBase
+from DatabaseHandler import checkUserRegistration, notNewAnymore
 from LoggerHandler import ClientLogger, InitLogger
 
-usedCommands = ['/start', '/help','/login','/admin']
+usedCommands = ['/start', '/help', '/login', '/admin']
 
 subCategories = ['Кроссовки', 'Кеды', 'Тапки', 'Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто',
                  'Бомбер', 'Спортивные', 'Обычные']
@@ -34,8 +35,9 @@ async def info(message: types.Message):
 # @dp.callback_query_handler(text=['back','backToCat'],state='*')
 async def backCallback(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'backToCat':
-        await callback.message.edit_text(text=getCategoryInfo() + '\nВыберите категорию',
-                                         reply_markup=clientKbDict['main'])
+        await callback.message.edit_text(
+            text=getCategoryInfo(str(callback.from_user.id)) + '\nВыберите категорию',
+            reply_markup=clientKbDict['main'])
         await FSMClient.categorySelect.set()
     else:
         await back(callback.message, state)
@@ -47,7 +49,7 @@ async def back(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Возвращаюсь...', reply_markup=types.ReplyKeyboardRemove())
     if await state.get_state() == "FSMClient:showClothes":
         await bot.send_message(message.chat.id,
-                               text=getCategoryInfo() + '\nВыберите категорию',
+                               text=getCategoryInfo(str(message.from_user.id)) + '\nВыберите категорию',
                                reply_markup=clientKbDict['main'])
         await FSMClient.categorySelect.set()
     else:
@@ -65,8 +67,9 @@ async def start(message: types.Message):
 # @dp.message_handler(Text(equals='каталог', ignore_case=True))
 async def catalogEvent(message: types.Message):
     await FSMClient.categorySelect.set()
+    checkUserRegistration(str(message.from_user.id)) # check if user used a bot
     await bot.send_message(message.chat.id, 'Открываю каталог', reply_markup=types.ReplyKeyboardRemove())
-    await bot.send_message(message.chat.id, getCategoryInfo() + '\nВыберите категорию',
+    await bot.send_message(message.chat.id, getCategoryInfo(str(message.from_user.id)) + '\nВыберите категорию',
                            reply_markup=clientKbDict['main'])
 
 
@@ -76,8 +79,9 @@ async def subcategorySelect(callback: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as show:
         show['category'] = callback.data
     try:
-        await callback.message.edit_text(text=getSubCategoryInfo(callback.data) + '\nВыберите подкатегорию',
-                                         reply_markup=getSubCategoryKb(callback.data))
+        await callback.message.edit_text(
+            text=getSubCategoryInfo(callback.data, str(callback.from_user.id)) + '\nВыберите подкатегорию',
+            reply_markup=getSubCategoryKb(callback.data))
     except Exception as e:
         print(e, callback)
 
@@ -101,6 +105,7 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
     if callback.from_user.id in adminId.keys():
         flipperKb.add(types.KeyboardButton('Удалить'))
     async with state.proxy() as show:
+        notNewAnymore(callback.from_user.id, show['category'], show['subCategory'])
         show['clothes']: dict = dict(getClothesList([show['category'], show['subCategory']]))
         if show['clothes'] != {}:
             await bot.send_message(callback.message.chat.id, 'Вывод вещей по выбранной категории',
@@ -152,7 +157,7 @@ async def deleteCloth(message: types.Message, state: FSMContext):
         if show['countOfCloths'] == 1:
             await bot.send_message(
                 chat_id=message.chat.id,
-                text=getSubCategoryInfo(show['category']) + '\nВыберите подкатегорию',
+                text=getSubCategoryInfo(show['category'],str(message.from_user.id)) + '\nВыберите подкатегорию',
                 reply_markup=getSubCategoryKb(show['category'])
             )
             await FSMClient.previous()
