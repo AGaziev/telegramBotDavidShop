@@ -1,20 +1,33 @@
 from DatabaseHandler.firebaseConfigure import db
+from aiogram import types
 from LoggerHandler import DBLogger
 import collections
 
 
-def checkUserRegistration(id):  # check if user used a bot
+def checkUserRegistration(id, message):  # check if user used a bot
     try:
         registeredId = db.child('userInfo').get().val().keys()
     except AttributeError:
         registeredId = []
     if id not in registeredId:
         noveltyListForNewUser = listForNewUser()
-        db.child('userInfo').child(id).set(noveltyListForNewUser)
+        db.child('userInfo').child(id).child('noveltyCheck').set(noveltyListForNewUser)
+        db.child('userInfo').child(id).update({'username': f'{getUserInfo(message)}'})
         DBLogger.info(f'New user registered to bot with id: {id}')
         return False
     else:
         return True
+
+def getUserInfo(message:types.Message):
+    info = ''
+    if message.from_user.username is not None:
+        info+=message.from_user.username + ' '
+    if message.from_user.first_name is not None:
+        info+=message.from_user.first_name + ' '
+    if message.from_user.last_name is not None:
+        info+message.from_user.last_name
+    return info
+
 
 
 def listForNewUser():  # get list for new users depended on clothes counters (false if no cloth in subcategory
@@ -30,7 +43,7 @@ def listForNewUser():  # get list for new users depended on clothes counters (fa
 def categoriesWithNew(id):  # get categories with new items
     id = str(id)
     categoryWithNew = []
-    indicatorsForId = db.child('userInfo').child(id).get().val()
+    indicatorsForId = db.child('userInfo').child(id).child('noveltyCheck').get().val()
     for cat, subCatDict in indicatorsForId.items():
         if True in subCatDict.values():
             categoryWithNew.append(cat)
@@ -40,7 +53,7 @@ def categoriesWithNew(id):  # get categories with new items
 def subcatWithNew(id, category):  # get subcategories with new items
     id = str(id)
     subCatsWithNew = []
-    indicatorsForId = db.child('userInfo').child(id).child(category).get().val()
+    indicatorsForId = db.child('userInfo').child(id).child('noveltyCheck').child(category).get().val()
     for subCat, isNew in indicatorsForId.items():
         if isNew:
             subCatsWithNew.append(subCat)
@@ -48,7 +61,13 @@ def subcatWithNew(id, category):  # get subcategories with new items
 
 
 def notNewAnymore(id, category, subCategory):  # falsing new for subcategory
-    db.child('userInfo').child(id).child(category).child(subCategory).set(False)
+    db.child('userInfo').child(id).child('noveltyCheck').child(category).child(subCategory).set(False)
+
+
+def setNoveltyToUsers(category,subCategory, novelty):
+    listOfUsersId = db.child('userInfo').get().val().keys()
+    for userId in listOfUsersId:
+        db.child(f'userInfo/{userId}/noveltyCheck/{category}/{subCategory}').set(novelty)
 
 
 categoryList = {

@@ -59,6 +59,7 @@ async def back(message: types.Message, state: FSMContext):
 
 # @dp.message_handler(commands=['start','help'])
 async def start(message: types.Message):
+    checkUserRegistration(str(message.from_user.id), message)
     await bot.send_message(message.chat.id,
                            text='Привет, это бот-каталог вещей магазина SecondRoom',
                            reply_markup=clientKbDict['start'])
@@ -67,7 +68,7 @@ async def start(message: types.Message):
 # @dp.message_handler(Text(equals='каталог', ignore_case=True))
 async def catalogEvent(message: types.Message):
     await FSMClient.categorySelect.set()
-    checkUserRegistration(str(message.from_user.id)) # check if user used a bot
+    checkUserRegistration(str(message.from_user.id), message) # check if user used a bot
     await bot.send_message(message.chat.id, 'Открываю каталог', reply_markup=types.ReplyKeyboardRemove())
     await bot.send_message(message.chat.id, getCategoryInfo(str(message.from_user.id)) + '\nВыберите категорию',
                            reply_markup=clientKbDict['main'])

@@ -1,4 +1,5 @@
 from DatabaseHandler.firebaseConfigure import db
+from DatabaseHandler.userInfo import setNoveltyToUsers
 from LoggerHandler import DBLogger
 
 # from keyboard import category as categoryList
@@ -12,6 +13,7 @@ def addCloth(data: dict):
     db.child('CLOTHES').child(data['category']).child(data['subCategory']).push(
         {k: v for k, v in data.items() if k in showInfo})
     getNumberOfClothes([data['category'], data['subCategory']])
+    setNoveltyToUsers(data['category'], data['subCategory'], True)
     updateAllClothesCounter()
 
 
@@ -19,7 +21,9 @@ def deleteCloth(path: list):
     DBLogger.info(
         f'Deleting cloth from base {path[0]},{path[1]} with id: {path[2]}')
     db.child(getDbPath(path)).remove()
-    getNumberOfClothes([path[0], path[1]])
+    count = getNumberOfClothes([path[0], path[1]])
+    if count == 0:
+        setNoveltyToUsers(path[0], path[1], False)
     updateAllClothesCounter()
 
 
