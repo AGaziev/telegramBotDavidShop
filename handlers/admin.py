@@ -1,4 +1,4 @@
-from aiogram import types
+﻿from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
@@ -9,6 +9,7 @@ from create_bot import bot, dp
 from keyboard import adminKbDict, otherKbDict, category
 from DatabaseHandler import DBcontroller
 from LoggerHandler import AdminLogger, InitLogger
+from messagePattern import getClothInfoForChannel
 
 import datetime
 
@@ -16,7 +17,10 @@ adminId = {1256578670: 'David',
            292667494: 'Alan',
            5188975607: 'bot',
            799573239: 'Kirill',
-           659638030: 'Koles'}
+           659638030: 'Koles',
+           5168712790: 'testBot'}
+
+generalChannelId = -1001508153758
 
 
 class FSMAdmin(StatesGroup):
@@ -170,10 +174,19 @@ async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
         else:
             data['user'] = '@biruytskovskynf'
         data['date'] = str(datetime.date.today())
+        if callback.from_user.id in adminId.keys():
+            await postNewClothInChannel(data)
         DBcontroller.addCloth(data)
     await state.finish()
     await admLogin(callback.message, True)
 
+
+async def postNewClothInChannel(clothInfoDict):
+    media = types.MediaGroup()
+    for i in range(len(clothInfoDict['photo'])):
+        media.attach_photo(
+            types.InputMediaPhoto(clothInfoDict['photo'][i], caption=getClothInfoForChannel(clothInfoDict) if i == 0 else ''))
+    await bot.send_media_group(generalChannelId, media=media)
 
 def registerHandlers():
     # cancel state handlers

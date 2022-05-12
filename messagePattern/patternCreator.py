@@ -50,3 +50,11 @@ def getClothInfo(data: dict, current, total):
            f'Состояние: {data["condition"]}\n' \
            f'Размер: {data["size"]}\n' \
            f'За покупкой {data["user"]}'
+
+def getClothInfoForChannel(data:dict):
+    name = (f'\"{data["name"]}\"' if data["name"] != 'None' else '')
+    return f'{data["brand"]}\n\n' \
+           f'{data["subCategory"]} {name}\n\n' \
+           f'{data["size"]}\n\n' \
+           f'{data["price"]}\n\n' \
+           f'За покупкой {data["user"]}'
