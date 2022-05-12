@@ -175,7 +175,10 @@ async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
             data['user'] = '@biruytskovskynf'
         data['date'] = str(datetime.date.today())
         if callback.from_user.id in adminId.keys():
-            await postNewClothInChannel(data)
+            try:
+                await postNewClothInChannel(data)
+            except Exception as e:
+                AdminLogger.error('Post in general channel rejected by ' + type(e))
         DBcontroller.addCloth(data)
     await state.finish()
     await admLogin(callback.message, True)
