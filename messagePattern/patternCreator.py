@@ -4,14 +4,15 @@ replyPatterns = {
 
 from DatabaseHandler import getMainCategoryCount, getNumberOfClothes
 from DatabaseHandler import categoriesWithNew, subcatWithNew
-from keyboard import category as catList
+from DatabaseHandler import getCategories
 import datetime
 
 
 def getCategoryInfo(id):
     text = 'Количество вещей в каждой категории\n'
     catWithNew = categoriesWithNew(id)
-    for category in catList.keys():
+    categoriesDict = getCategories()
+    for category in categoriesDict.keys():
         text += f'{category} - {getMainCategoryCount(category)} {"NEW!" if category in catWithNew else ""}\n'
     return text
 
@@ -20,8 +21,9 @@ def getSubCategoryInfo(category, id):
     start = 'Количество вещей в каждой подкатегории\n'
     text = ''
     subcatsNew = subcatWithNew(id, category)
-    for subcategory in catList[category]:
-        count = getNumberOfClothes([category, subcategory],
+    categoriesDict = getCategories()
+    for subcategory in categoriesDict[category]:
+        count = getNumberOfClothes(category, subcategory,
                                    justCheck=True)
         if count != 0:
             text += f'{subcategory} - {count} {"NEW!" if subcategory in subcatsNew else ""}\n'

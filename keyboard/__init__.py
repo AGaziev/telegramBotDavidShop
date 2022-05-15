@@ -1,3 +1,3 @@
 from keyboard.client_keyboards import clientKbDict, getSubCategoryKb
-from keyboard.other_keyboards import otherKbDict, category, ikbSideSellersPanel
-from keyboard.admin_keyboards import adminKbDict
+from keyboard.admin_keyboards import adminKbDict, getSubCategoryKbAdmin
+from keyboard.other_keyboards import ikbSideSellersPanel

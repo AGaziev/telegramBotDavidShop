@@ -6,23 +6,14 @@ from aiogram.types import ReplyKeyboardRemove
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from create_bot import bot, dp
-from keyboard import adminKbDict, otherKbDict, category
-from DatabaseHandler import DBcontroller
+from keyboard import adminKbDict, getSubCategoryKbAdmin
+from DatabaseHandler import DBcontroller, getAdmin, getCategories
 from LoggerHandler import AdminLogger, InitLogger
 from messagePattern import getClothInfoForChannel
 
 import datetime
 
-adminId = {1256578670: 'David',
-           292667494: 'Alan',
-           5188975607: 'bot',
-           799573239: 'Kirill',
-           659638030: 'Koles',
-           5168712790: 'testBot'}
-
 generalChannelId = -1001508153758
-
-
 class FSMAdmin(StatesGroup):
     category = State()
     subCategory = State()
@@ -40,9 +31,8 @@ class FSMAdmin(StatesGroup):
 # @dp.message_handler(state=FSMAdmin.GroupStates['addCloth'], commands='отмена')
 # @dp.message_handler(Text(equals='отмена', ignore_case=True), state=FSMAdmin.GroupStates['addCloth'])
 async def cancelAdd(message: types.Message, state: FSMContext):
-    if message.from_user.id in adminId.keys():
+    if message.from_user.id in getAdmin().keys():
         AdminLogger.info(f'{message.chat.id} exit admin panel')
-        print('cancel admin panel')
     await message.reply('Отмена')
     await state.finish()
 
@@ -57,9 +47,9 @@ async def cancelAdd(message: types.Message, state: FSMContext):
 
 # @dp.message_handler(commands=['admin'], state=None)
 async def admLogin(message: types.Message, logged=False):
-    if message.from_user.id in adminId.keys():
+    if message.from_user.id in getAdmin().keys():
         if not logged:
-            AdminLogger.info(f'{adminId[message.from_user.id]} entered admin panel')
+            AdminLogger.info(f'{getAdmin()[message.from_user.id]} entered admin panel')
         await bot.send_message(message.chat.id, 'Успешный вход на панель админа',
                                reply_markup=adminKbDict['adminPanelInline'])
     else:
@@ -69,11 +59,8 @@ async def admLogin(message: types.Message, logged=False):
 # @dp.callback_query_handler(text='addCloth')
 async def startAdding(call: types.CallbackQuery):
     await call.message.edit_text('Добавление вещи...')
-    AdminLogger.info(f'{adminId[call.from_user.id]} started to add new Cloth')
-    catKb = otherKbDict['main']
-    catKb.one_time_keyboard = True
-    await bot.send_message(call.from_user.id, 'Выберите категорию', reply_markup=otherKbDict['main'])
-    del catKb
+    AdminLogger.info(f'{getAdmin()[call.from_user.id]} started to add new Cloth')
+    await bot.send_message(call.from_user.id, 'Выберите категорию', reply_markup=adminKbDict['main'])
     await call.answer('start adding new cloth', show_alert=False)
     await FSMAdmin.category.set()
 
@@ -83,7 +70,7 @@ async def chooseSubCategory(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['category'] = message.text
     await FSMAdmin.next()
-    subCatKb = otherKbDict[message.text]
+    subCatKb = getSubCategoryKbAdmin(message.text)
     subCatKb.one_time_keyboard = True
     await bot.send_message(message.chat.id, 'Выберите подкатегорию',
                            reply_markup=subCatKb)
@@ -174,7 +161,7 @@ async def returnToAdminPanel(callback: types.CallbackQuery, state: FSMContext):
         else:
             data['user'] = '@biruytskovskynf'
         data['date'] = str(datetime.date.today())
-        if callback.from_user.id in adminId.keys():
+        if callback.from_user.id in getAdmin().keys():
             try:
                 await postNewClothInChannel(data)
             except Exception as e:
@@ -200,7 +187,7 @@ def registerHandlers():
     dp.register_message_handler(admLogin, commands=['admin'])
     # add cloth handlers
     dp.register_callback_query_handler(startAdding, text='addCloth')
-    dp.register_message_handler(chooseSubCategory, Text(equals=category.keys(), ignore_case=False),
+    dp.register_message_handler(chooseSubCategory, Text(equals=getCategories().keys(), ignore_case=False),
                                 state=FSMAdmin.category)
     dp.register_message_handler(chooseBrand, state=FSMAdmin.subCategory)
     dp.register_message_handler(chooseName, state=FSMAdmin.brand)

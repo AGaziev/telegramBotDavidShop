@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
-from DatabaseHandler import getNumberOfClothes
+from DatabaseHandler import getNumberOfClothes, getCategories
 
 from keyboard import other_keyboards
 
@@ -13,7 +13,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 backBut = InlineKeyboardButton('Назад', callback_data='back')
 backCatBut = InlineKeyboardButton('Назад', callback_data='backToCat')
 
-mainBut = (InlineKeyboardButton(text, callback_data=text) for text in other_keyboards.category.keys())
+mainBut = (InlineKeyboardButton(text, callback_data=text) for text in getCategories().keys())
 ikbMain = InlineKeyboardMarkup()
 ikbMain.add(*mainBut).add(backBut)
 
@@ -42,12 +42,11 @@ ikbMain.add(*mainBut).add(backBut)
 
 def getSubCategoryKb(category):
     subCatKb = InlineKeyboardMarkup(row_width=3)
-    for subCategory in other_keyboards.category[category]:
-        if getNumberOfClothes([category, subCategory]) != 0:
+    for subCategory in getCategories()[category]:
+        if getNumberOfClothes(category, subCategory) != 0:
             subCatKb.insert(InlineKeyboardButton(subCategory, callback_data=subCategory))
     subCatKb.row(backCatBut)
     return subCatKb
-
 
 # Словарь с клавиатурами
 clientKbDict = {

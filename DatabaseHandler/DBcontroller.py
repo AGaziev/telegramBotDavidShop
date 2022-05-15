@@ -12,87 +12,99 @@ def addCloth(data: dict):
         f'Adding new cloth in base {data["category"]},{data["subCategory"]} with name: {data["brand"]} \"{data["name"]}\"')
     db.child('CLOTHES').child(data['category']).child(data['subCategory']).push(
         {k: v for k, v in data.items() if k in showInfo})
-    getNumberOfClothes([data['category'], data['subCategory']])
+    getNumberOfClothes(data['category'], data['subCategory'])
     setNoveltyToUsers(data['category'], data['subCategory'], True)
     updateAllClothesCounter()
 
 
-def deleteCloth(path: list):
+def deleteCloth(category, subCategory, clothId):
     DBLogger.info(
-        f'Deleting cloth from base {path[0]},{path[1]} with id: {path[2]}')
-    db.child(getDbPath(path)).remove()
-    count = getNumberOfClothes([path[0], path[1]])
+        f'Deleting cloth from base {category}, {subCategory} with id: {clothId}')
+    db.child('CLOTHES').child(category).child(subCategory).child(clothId).remove()
+    count = getNumberOfClothes(category, subCategory)
     if count == 0:
-        setNoveltyToUsers(path[0], path[1], False)
+        setNoveltyToUsers(category, subCategory, False)
     updateAllClothesCounter()
 
 
-def getDbPath(path: list):
-    dbPath = '/CLOTHES'
-    for child in path:
-        dbPath += f'/{child}'
-    return dbPath
-
-
-def getNumberOfClothes(path: list, justCheck=False):
-    clothes = db.child(getDbPath(path)).get().each()
+def getNumberOfClothes(category, subCategory, justCheck=False) -> int:
+    clothes = db.child('CLOTHES').child(category).child(subCategory).get().each()
     if clothes is not None:
         count = len(clothes)
     else:
         count = 0
     if not justCheck:
-        db.child('statistics/' + getDbPath(path)).set(count)
+        db.child('categories').child(category).child(subCategory).set(count)
     return count
 
 
-def getMainCategoryCount(category):
+def getMainCategoryCount(category) -> int:
     categoryCount = 0
-    if db.child('statistics/CLOTHES/' + category).get().each() is not None:
-        for subCategoryCounter in db.child('statistics/CLOTHES/' + category).get().each():
+    countersOfCategory = db.child('categories').child(category).get().each()
+    if countersOfCategory is not None:
+        for subCategoryCounter in countersOfCategory:
             categoryCount += subCategoryCounter.val()
     return categoryCount
 
 
 def updateAllClothesCounter():
     clothesCount = 0
-    for category in db.child('statistics/CLOTHES').get().each():
-        if category.key() != 'ALL':
-            clothesCount += getMainCategoryCount(category.key())
-    db.child('statistics/CLOTHES/ALL').set(clothesCount)
+    for category in getCategories().keys():
+        clothesCount += getMainCategoryCount(category)
+    db.child('statistics/counterOfItemsInStore').set(clothesCount)
     DBLogger.info('Updated Counter of all clothes')
     return clothesCount
 
 
-def getClothesList(path: list) -> dict:
-    if db.child(getDbPath(path)).get().val() is None:
+def getClothesList(category, subCategory) -> dict:
+    clothesList = db.child('CLOTHES').child(category).child(subCategory).get().val()
+    if clothesList is None:
         return {}
     else:
-        return db.child(getDbPath(path)).get().val()
+        return clothesList
 
 
 def totalUpdate():
-    for cat, subcat in categoryList.items():
-        for sub in subcat:
-            getNumberOfClothes([cat, sub])
+    for cat, subcat in getCategories().items():
+        for sub in subcat.keys():
+            getNumberOfClothes(cat, sub)
     updateAllClothesCounter()
 
 
-def getSellers():
+def getSellersID() -> list:
     try:
-        sellers = list(db.child('SideSellers').get().val().keys())
+        sellers = list(db.child('sellers').child('sideSellers').get().val().keys())
     except AttributeError:
         sellers = []
     return sellers
 
+def getAdmin() -> dict:
+    admins = {}
+    try:
+        tempAdmins = dict(db.child('sellers').child('admins').get().val())
+    except TypeError:
+        tempAdmins = {}
+    for id, name in tempAdmins.items():
+        admins[int(id)] = name
+    return admins
 
-categoryList = {
-    'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
-    'Верх': ('Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные', 'Polo', 'Рубашка', 'Лонгслив'),
-    'Низ': ('Спортивные', 'Обычные', 'Шорты', 'Джинсы')
-}
 
-# example = {'category': 'Обувь', 'subCategory': 'Кроссовки', 'brand': 'Nike', 'name': 'Monarch', 'price': 2000.0,
-#            'condition': 'Отличное',
-#            'photo': ['AgACAgIAAxkBAAIEnWI1DS_Sc-UfHR_S939ULbzFcZxPAALTvzEbEB-oSZkTqTje8FlOAQADAgADeQADIwQ'],
-#            'size': 'M'}
-# addCloth(example)
+def getCategories() -> dict:
+    try:
+        categoryList = dict(db.child('categories').get().val())
+    except TypeError:
+        categoryList = {}
+    return categoryList
+
+# print(getSellersID())
+# print(getCategories())
+# print(getAdmin())
+# totalUpdate()
+# getMainCategoryCount('Верх')
+# categoryList = {
+#     'Обувь': ('Кроссовки', 'Кеды', 'Тапки'),
+#     'Верх': (
+#     'Худи', 'Свитшот', 'Флиска', 'T-shirt', 'Майка', 'Куртка', 'Пальто', 'Бомбер', 'Спортивные', 'Polo', 'Рубашка',
+#     'Лонгслив'),
+#     'Низ': ('Спортивные', 'Обычные', 'Шорты', 'Джинсы')
+# }

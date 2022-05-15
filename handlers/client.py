@@ -7,9 +7,8 @@ from aiogram.types import MediaGroup
 from create_bot import dp, bot
 from messagePattern import replyPatterns, getCategoryInfo, getSubCategoryInfo, getClothInfo
 from keyboard import clientKbDict, getSubCategoryKb
-from keyboard import category as categoryList
-from handlers.admin import adminId
 from DatabaseHandler import getClothesList, getNumberOfClothes, deleteCloth as delFromBase
+from DatabaseHandler import getAdmin, getCategories
 from DatabaseHandler import checkUserRegistration, notNewAnymore
 from LoggerHandler import ClientLogger, InitLogger
 
@@ -94,7 +93,7 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
     await callback.answer()
     if not returned:
         async with state.proxy() as show:
-            if callback.data not in categoryList[show['category']]:
+            if callback.data not in getCategories()[show['category']]:
                 return
             else:
                 show['subCategory'] = callback.data
@@ -103,18 +102,18 @@ async def showClothes(callback: types.CallbackQuery, state: FSMContext, returned
     flipperKb = types.ReplyKeyboardMarkup(resize_keyboard=True)
     flipperKb.add(*flipperBut)
     # flipperKb.add(types.KeyboardButton('Написать владельцу'))
-    if callback.from_user.id in adminId.keys():
+    if callback.from_user.id in getAdmin().keys():
         flipperKb.add(types.KeyboardButton('Удалить'))
     async with state.proxy() as show:
         notNewAnymore(callback.from_user.id, show['category'], show['subCategory'])
-        show['clothes']: dict = dict(getClothesList([show['category'], show['subCategory']]))
+        show['clothes']: dict = dict(getClothesList(show['category'], show['subCategory']))
         if show['clothes'] != {}:
             await bot.send_message(callback.message.chat.id, 'Вывод вещей по выбранной категории',
                                    reply_markup=flipperKb)
             cloth = list(show['clothes'].values())[0]
             show['currentCloth'] = 0
             show['currentClothId'] = list(show['clothes'].keys())[show['currentCloth']]
-            show['countOfCloths'] = getNumberOfClothes([show['category'], show['subCategory']])
+            show['countOfCloths'] = getNumberOfClothes(show['category'], show['subCategory'])
             show['currentClothMessages'] = list(await bot.send_media_group(callback.message.chat.id,
                                                                            media=await createMediaGroup(cloth,
                                                                                                         show[
@@ -152,9 +151,8 @@ async def checkIter(current, total):
 # @dp.message_handler(IDFilter(adminId), Text(equals='удалить', ignore_case=True), state=FSMClient.showClothes)
 async def deleteCloth(message: types.Message, state: FSMContext):
     async with state.proxy() as show:
-        pathToDelete = [show['category'], show['subCategory'], show['currentClothId']]
-        delFromBase(pathToDelete)
-        show['clothes']: dict = dict(getClothesList([show['category'], show['subCategory']]))
+        delFromBase(show['category'], show['subCategory'], show['currentClothId'])
+        show['clothes']: dict = dict(getClothesList(show['category'], show['subCategory']))
         if show['countOfCloths'] == 1:
             await bot.send_message(
                 chat_id=message.chat.id,
@@ -198,7 +196,7 @@ def registerHandlers():
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True))
     dp.register_message_handler(back, Text(equals='Назад', ignore_case=True), state='*')
     dp.register_callback_query_handler(backCallback, text=['back', 'backToCat'], state='*')
-    dp.register_message_handler(deleteCloth, IDFilter(adminId), Text(equals='удалить', ignore_case=True),
+    dp.register_message_handler(deleteCloth, IDFilter(getAdmin()), Text(equals='удалить', ignore_case=True),
                                 state=FSMClient.showClothes)
     dp.register_callback_query_handler(subcategorySelect, text=['Обувь', 'Верх', 'Низ'], state=FSMClient.categorySelect)
     dp.register_callback_query_handler(showClothes, state=FSMClient.subCategorySelect)
@@ -208,6 +206,7 @@ def registerHandlers():
 
 
 def registerHandlersDebug():
+    adminId = getAdmin()
     dp.register_message_handler(start, commands=['start', 'help'], user_id=adminId.keys())
     dp.register_message_handler(catalogEvent, Text(equals='каталог', ignore_case=True), user_id=adminId.keys())
     dp.register_message_handler(info, Text(equals='информация', ignore_case=True), user_id=adminId.keys())
