@@ -11,7 +11,7 @@ from handlers import client, admin, other, sideSeller
 
 admin.registerHandlers()
 sideSeller.registerHandlers()
-if getenv("mode") == "debug":
+if getenv("MODE") == "debug":
     client.registerHandlersDebug()
     other.registerHandlers()
 else:

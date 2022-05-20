@@ -7,7 +7,7 @@ import os
 fsm = MemoryStorage()
 
 try:
-    bot = Bot(token=os.getenv("botToken"))
+    bot = Bot(token=os.getenv("BOT_TOKEN"))
     dp = Dispatcher(bot, storage=fsm)
 except:
     InitLogger.critical('Произошла ошибка при авторизации токена')
