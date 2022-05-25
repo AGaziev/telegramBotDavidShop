@@ -2,6 +2,9 @@ from aiogram.utils import executor
 from create_bot import dp
 from DatabaseHandler import totalUpdate as totalUpdateDB
 from os import getenv
+import dotenv
+
+dotenv.load_dotenv(__file__ + '/../.env.local')
 
 async def on_startup(_):
     print('Bot online!')

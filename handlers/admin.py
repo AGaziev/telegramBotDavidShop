@@ -14,6 +14,8 @@ from messagePattern import getClothInfoForChannel
 import datetime
 
 generalChannelId = -1001508153758
+
+
 class FSMAdmin(StatesGroup):
     category = State()
     subCategory = State()
@@ -140,7 +142,7 @@ async def choosePhoto(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Загрузите фото', reply_markup=ReplyKeyboardRemove())
 
 
-# @dp.message_handler(content_types = ['photo'], state=FSMAdmin.photo)
+# @dp.message_handler(content_types = ['photo','text], state=FSMAdmin.photo)
 async def endAddingCloth(message: types.Message, state: FSMContext):
     if message.text != '-':
         async with state.proxy() as data:
@@ -175,8 +177,10 @@ async def postNewClothInChannel(clothInfoDict):
     media = types.MediaGroup()
     for i in range(len(clothInfoDict['photo'])):
         media.attach_photo(
-            types.InputMediaPhoto(clothInfoDict['photo'][i], caption=getClothInfoForChannel(clothInfoDict) if i == 0 else ''))
+            types.InputMediaPhoto(clothInfoDict['photo'][i],
+                                  caption=getClothInfoForChannel(clothInfoDict) if i == 0 else ''))
     await bot.send_media_group(generalChannelId, media=media)
+
 
 def registerHandlers():
     # cancel state handlers
