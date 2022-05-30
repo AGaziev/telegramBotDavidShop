@@ -5,6 +5,7 @@ from os import getenv
 import dotenv
 
 dotenv.load_dotenv(__file__ + '/../.env.local')
+print(getenv("BOT_TOKEN"))
 
 async def on_startup(_):
     print('Bot online!')
